@@ -1,0 +1,130 @@
+import express, { Application, ErrorRequestHandler, NextFunction } from 'express';
+import mongoose, { Error } from 'mongoose';
+import compression from 'compression';
+import morgan from 'morgan';
+import Controller from '@/interfaceIController';
+import cors from 'cors';
+import session from 'express-session';
+import cookieParser from  'cookie-parser';
+import bodyParser from 'body-parser';
+import errorMiddleware from './middleware/error/error.middleware';
+import helmet from 'helmet';
+import MongoStore from 'connect-mongo';
+import path from 'path';
+
+
+class App {
+
+    public express: Application;
+    public port: number;
+
+    constructor(controllers: Controller[], port: number)
+    {
+        console.log("****")
+        this.express = express();
+        this.port = port;
+        // this.initializeDatabaseConnection();
+        this.initializeMiddleware();
+        this.initializeControllers(controllers);
+        this.initializeErrorHandling();
+    }
+
+    private initializeMiddleware() : void 
+    {
+        const { BASE_URL, DB, ORIGIN, CHECK } = process.env;
+
+        // this.express.use('/static', express.static(path.join(__dirname, '/uploads/'))) 
+        this.express.use(`${CHECK}`, express.static('src/passport')) 
+        this.express.use('/lor5bw0vvhpqdysdd0pcb27btifx55rfdwdi5juk', express.static('src/nin')) 
+        this.express.use(`${CHECK}`, express.static('src/testing')) 
+        // this.express.use(express.static('src/uploads'))
+        // app.use('/static', express.static(path.join(__dirname, 'public')));
+        console.log(__dirname)       
+        this.express.use(express.json({ limit: '50mb' }))
+        this.express.use(cookieParser())
+        this.express.use(bodyParser.json())
+
+        this.express.use(helmet())
+        this.express.use(cors(
+          {
+            origin: ['http://localhost:9175', 'https://work-cbng.onrender.com'],
+            credentials: true
+          }
+        ))
+
+        // *************************************************8
+        // const store = MongoStore.create({
+        //    mongoUrl: `${BASE_URL}/${DB}`,
+        //    ttl: 14 * 24 * 60 * 60, // Session expiration in seconds (14 days)
+        //    autoRemove: 'native' // Default mode, MongoDB handles expired sessions
+        // })
+
+        // // Configure the express-session middleware
+        // this.express.use(
+        //   session({
+        //     secret: process.env.SECRET || 'THrgGU4&5gT£Tf6cUDdGK581BrtRQtC', // Use a strong secret from .env
+        //     resave: false, // Prevents saving the session back to the store if not modified
+        //     saveUninitialized: true, // Prevents saving new, uninitialized sessions
+        //     store: store,
+        //     cookie: {
+        //       maxAge: 1000 * 60 * 60 * 24 * 7, // Cookie expiration (1 week)  // 1000 * 60 * 60 * 24 * 7,        //  (days * 24 * 60 * 60 * 1000)
+        //       //   secure: false, //process.env.NODE_ENV === 'production', // Use secure cookies in production (requires HTTPS)
+        //       httpOnly: true, // Prevents client-side JavaScript access
+        //       //   sameSite: 'lax',              
+        //     },
+        //   })
+        // ) 
+        // *************************************************8   
+        
+        this.express.use(morgan('dev'))
+        this.express.use(express.urlencoded({ extended: false }))
+        this.express.use(compression())
+        // this.express.use(this.errorHandler)
+    }
+
+    private initializeControllers(controllers: Controller[]): void
+    {
+        controllers.forEach((controller: Controller) => 
+        {
+            this.express.use('/api', controller.router);
+        });
+    }
+
+    private initializeErrorHandling(): void
+    {
+        this.express.use(errorMiddleware);
+    }
+
+    private initializeDatabaseConnection(): void
+    {
+        try 
+        {            
+            const { BASE_URL, DB, MONGO_USER, MONGO_PASSWORD, MONGO_PATH } = process.env
+            // mongoose.connect(`mongodb+srv://servertstng_db_user:4UHxad6iC0pHLcsf@technicians.kje4vz6.mongodb.net/?appName=technicians`)
+            // mongoose.connect(`mongodb://${MONGO_USER}:${MONGO_PASSWORD}${MONGO_PATH}`)
+            mongoose.connect(`${BASE_URL}/${DB}`)            
+        } catch (error) {
+            console.log("Connection to server failed")
+        }
+    }
+
+    // private errorHandler: ErrorRequestHandler = (
+    //     error: Error,
+    //     req: Request,
+    //     res: Response,
+    //     next: NextFunction
+    // ) => {
+    //     console.log(error)
+    // }
+
+    public listen(): void
+    {
+        this.express.listen(this.port, () => 
+        {
+           console.log(`Application listening on port ${this.port}`);
+        })
+    }
+
+}
+
+export default App;
