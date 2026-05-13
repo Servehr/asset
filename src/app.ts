@@ -31,12 +31,10 @@ class App {
 
     private initializeMiddleware() : void 
     {
-        const { BASE_URL, DB, ORIGIN, CHECK } = process.env;
+        const { BASE_URL, DB, ORIGIN, URL_PATH } = process.env;
 
         // this.express.use('/static', express.static(path.join(__dirname, '/uploads/'))) 
-        this.express.use(`${CHECK}`, express.static('src/passport')) 
-        this.express.use('/lor5bw0vvhpqdysdd0pcb27btifx55rfdwdi5juk', express.static('src/nin')) 
-        this.express.use(`${CHECK}`, express.static('src/testing')) 
+        this.express.use(`/${URL_PATH}`, express.static('src/storage/technicianswork')) 
         // this.express.use(express.static('src/uploads'))
         // app.use('/static', express.static(path.join(__dirname, 'public')));
         console.log(__dirname)       
@@ -47,7 +45,7 @@ class App {
         this.express.use(helmet())
         this.express.use(cors(
           {
-            origin: ['http://localhost:9175', 'https://work-cbng.onrender.com'],
+            origin: ['http://localhost:9175', 'https://workings.onrender.com'],
             credentials: true
           }
         ))
@@ -102,7 +100,7 @@ class App {
             const { BASE_URL, DB, MONGO_USER, MONGO_PASSWORD, MONGO_PATH } = process.env
             // mongoose.connect(`mongodb+srv://servertstng_db_user:4UHxad6iC0pHLcsf@technicians.kje4vz6.mongodb.net/?appName=technicians`)
             // mongoose.connect(`mongodb://${MONGO_USER}:${MONGO_PASSWORD}${MONGO_PATH}`)
-            mongoose.connect(`${BASE_URL}/${DB}`)            
+            // mongoose.connect(`${BASE_URL}/${DB}`)            
         } catch (error) {
             console.log("Connection to server failed")
         }

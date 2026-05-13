@@ -1,10 +1,10 @@
 import { Router, Request, Response, NextFunction } from "express"
 import IController from "@/interfaceIController"
 import ImageService from "@/service/image.service"
-import { unlink } from "node:fs/promises"
-import path from "node:path"
+import { readdir, unlink } from 'node:fs/promises';
+import path, { join } from 'node:path'
 import * as fs from 'fs'
-
+               
 
 class ImageController implements IController {
 
@@ -27,9 +27,13 @@ class ImageController implements IController {
             // validateMiddleware(validate.testing),
             this.multipleUpload
         )
-        this.router.post(`${this.path}/delete`,
+        this.router.post(`${this.path}/single-delete`,
             // validateMiddleware(validate.register),
-            this.delete
+            this.singleDelete
+        )
+        this.router.post(`${this.path}/multiple-delete`,
+            // validateMiddleware(validate.register),
+            this.multipleDelete
         )
         this.router.post(`${this.path}/download`,
             // validateMiddleware(validate.register),
@@ -72,7 +76,6 @@ class ImageController implements IController {
     
     }
 
-
     private multipleUpload = async (
         req: Request,
         res: Response,
@@ -83,7 +86,6 @@ class ImageController implements IController {
         {
            const { uploads } = req?.body
            
-         //   res.status(200).json(uploads)
            if(!Array.isArray(uploads))
            {
               const data: { message: string, data: object, statusCode: number } = 
@@ -121,7 +123,107 @@ class ImageController implements IController {
     
     }
 
-    private delete = async (
+    private singleDelete = async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ): Promise<any> => {
+        
+       const company: string = 'storage/technicianswork'
+      try
+      {
+         const { fileName } = req.body
+         const pathToFile: string = './src/'
+         const filePath = path.join(pathToFile, company, fileName)
+         if(!fs.existsSync(filePath))
+         {
+           const data: { message: string, data: object, statusCode: number } = 
+           {
+              message: 'deleting file failed',
+              data: { },
+              statusCode: 200
+           }
+           res.status(200).json(data)
+         } else {            
+            fs.unlinkSync(filePath)               
+            const data: { message: string, data: object, statusCode: number } = 
+            {
+              message: 'File sucessfully removed',
+              data: { },
+              statusCode: 200
+            }     
+            res.status(200).json(data)
+         }
+
+      } catch (error: any) {
+         const err = JSON.parse(error.message)
+         const errMsg = err.message 
+         const code = err.statusCode
+      
+         const data: any = 
+         {
+           message: errMsg,
+           data: { },
+           statusCode: code
+         }
+         res.status(code).json(data)
+      }
+    }
+
+    private multipleDelete = async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ): Promise<any> => {
+       
+      const { fileNames } = req.body
+       const pathToFile: string = './src/'
+       const company: string = 'storage/technicianswork'
+      try
+      {
+         if(!Array.isArray(fileNames))
+         {
+            const data: { message: string, data: object, statusCode: number } = 
+            {
+              message: 'Input has to be an array',
+              data: {  },
+              statusCode: 200
+            }
+            res.status(200).json(data)
+         }
+         const deletionPromises = fileNames.map((file: string) => 
+         {
+            const filePath = path.join(pathToFile, company, file)
+            fs.unlinkSync(filePath);
+         });
+         await Promise.all(deletionPromises); 
+
+         const data: { message: string, data: object, statusCode: number } = 
+         {
+           message: 'File sucessfully removed',
+           data: { },
+           statusCode: 200
+         }     
+         res.status(200).json(data)
+         
+
+      } catch (error: any) {
+
+         const err = JSON.parse(error.message)
+         const errMsg = err.message 
+         const code = err.statusCode
+      
+         const data: any = 
+         {
+           message: errMsg,
+           data: { },
+           statusCode: code
+         }
+         res.status(code).json(data)
+      }
+    }
+
+    private retrieve = async (
         req: Request,
         res: Response,
         next: NextFunction
