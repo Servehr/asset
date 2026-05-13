@@ -99,8 +99,7 @@ class ImageController implements IController {
            }
            
            const UploadImage = await this.imageService.uploads(uploads)
-           const data: { message: string, data: object, statusCode: number } = 
-           {
+           const data: { message: string, data: any, statusCode: number } = {
               message: 'upload successful',
               data: UploadImage,
               statusCode: 200
