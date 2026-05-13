@@ -107,17 +107,18 @@ class ImageController implements IController {
            res.status(200).json(data)
 
         } catch (error: any) {
-           const err = JSON.parse(error.message)
-           const errMsg = err.message 
-           const code = err.statusCode
+         
+         //   const err = JSON.parse(error.message)
+         //   const errMsg = err.message 
+         //   const code = err.statusCode
             
-           const data: any = 
-           {
-              message: errMsg,
-              data: { },
-              statusCode: code
-           }
-           res.status(code).json(data)
+         //   const data: any = 
+         //   {
+         //      message: errMsg,
+         //      data: { },
+         //      statusCode: code
+         //   }
+           res.status(400).json('data')
         }
     
     }
