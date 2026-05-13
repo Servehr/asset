@@ -17,7 +17,7 @@ class ImageService
          const fileName = `technicians-work-image_${Date.now()}.jpg`
          const uploadPath = path.join('./src/', 'passport', fileName)
          fs.writeFileSync(uploadPath, imageBuffer);
-         return  `${ORIGIN}${URL_PATH}/${fileName}`; 
+         return  `${ORIGIN}/${URL_PATH}/${fileName}`; 
        } catch (error: any) {
           throw new Error(error);
        }
@@ -38,7 +38,8 @@ class ImageService
             const fileName = `technicians-work-image_${Date.now()}.jpg`
             const uploadPath = path.join('./src/', company, fileName)
             fs.writeFileSync(uploadPath, imageBuffer);
-            images.push(`${ORIGIN}${URL_PATH}/${fileName}`)
+            images.push(`${ORIGIN}/${URL_PATH}/${fileName}`)
+            console.log(`${ORIGIN}/${URL_PATH}/${fileName}`)
          }         
          return  images; 
        } catch (error: any) {

@@ -31,10 +31,10 @@ class App {
 
     private initializeMiddleware() : void 
     {
-        const { BASE_URL, DB, ORIGIN, CHECK } = process.env;
+        const { BASE_URL, DB, ORIGIN, URL_PATH } = process.env;
 
         // this.express.use('/static', express.static(path.join(__dirname, '/uploads/'))) 
-        this.express.use(`${CHECK}`, express.static('src/storage/technicianswork')) 
+        this.express.use(`/${URL_PATH}`, express.static('src/storage/technicianswork')) 
         // this.express.use(express.static('src/uploads'))
         // app.use('/static', express.static(path.join(__dirname, 'public')));
         console.log(__dirname)       
