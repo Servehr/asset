@@ -36,9 +36,10 @@ class ImageService
             const base64Image = uploads[index].replace(/^data:image\/\w+;base64,/, "");
             const imageBuffer = Buffer.from(base64Image, 'base64')
             const fileName = `technicians-work-image_${Date.now()}.jpg`
-            const uploadPath = path.join('./src/', company, fileName)
-            fs.writeFileSync(uploadPath, imageBuffer);
-            images.push(`${ORIGIN}/${URL_PATH}/${fileName}`)
+            // const uploadPath = path.join('./src/', company, fileName)
+            // fs.writeFileSync(uploadPath, imageBuffer);
+            // images.push(`${ORIGIN}/${URL_PATH}/${fileName}`)
+            images.push(`${fileName}`)
          }         
          return  images; 
        } catch (error: any) {
