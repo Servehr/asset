@@ -37,7 +37,7 @@ class ImageService
             const imageBuffer = Buffer.from(base64Image, 'base64')
             const fileName = `technicians-work-image_${Date.now()}.jpg`
             const uploadPath = path.join('./src/', company, fileName)
-            // fs.writeFileSync(uploadPath, imageBuffer);
+            fs.writeFileSync(uploadPath, imageBuffer);
             images.push(`${ORIGIN}/${URL_PATH}/${fileName}`)
          }         
          return  images; 
