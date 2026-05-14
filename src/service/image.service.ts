@@ -39,7 +39,6 @@ class ImageService
             const uploadPath = path.join('./src/', company, fileName)
             // fs.writeFileSync(uploadPath, imageBuffer);
             images.push(`${ORIGIN}/${URL_PATH}/${fileName}`)
-            images.push(`${uploadPath}`)
          }         
          return  images; 
        } catch (error: any) {
