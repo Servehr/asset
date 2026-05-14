@@ -98,27 +98,27 @@ class ImageController implements IController {
 
            }
            
-           const UploadImage = await this.imageService.uploads(uploads)
-           const data: { message: string, data: any, statusCode: number } = {
-              message: 'upload successful',
-              data: UploadImage,
-              statusCode: 200
-           }
-           res.status(200).json(data)
+         //   const UploadImage = await this.imageService.uploads(uploads)
+         //   const data: { message: string, data: any, statusCode: number } = {
+         //      message: 'upload successful',
+         //      data: UploadImage,
+         //      statusCode: 200
+         //   }
+           res.status(200).json('God is good')
 
         } catch (error: any) {
          
-         //   const err = JSON.parse(error.message)
-         //   const errMsg = err.message 
-         //   const code = err.statusCode
+           const err = JSON.parse(error.message)
+           const errMsg = err.message 
+           const code = err.statusCode
             
-         //   const data: any = 
-         //   {
-         //      message: errMsg,
-         //      data: { },
-         //      statusCode: code
-         //   }
-           res.status(400).json('data')
+           const data: any = 
+           {
+              message: errMsg,
+              data: { },
+              statusCode: code
+           }
+           res.status(code).json(data)
         }
     
     }
